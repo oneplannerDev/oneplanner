@@ -1,0 +1,110 @@
+package com.ontide.oneplanner.client;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ontide.oneplanner.io.ResultObj;
+import com.ontide.oneplanner.obj.UserInfo;
+
+public class RestClient<T> {
+	private static final Logger logger = LoggerFactory.getLogger(RestClient.class);
+	
+    public static void main(String[] args) {
+    	String url = "http://localhost:8080/ringcatcher/json/register";
+    	
+    	String body = "{\"userId\":\"mytoken-id\",\"userNum\":\"01044445555\",\"userEmail\":\"jinnonspot@gmail.com\",\"recomId\":\"hisrecommend\"}";
+    	RestClient json = new RestClient();
+    	json.http(url, body);
+
+    }
+    
+    public ResultObj<T> callJsonHttp(String url, Object jsonObj) {
+    	JSONObject reqJson = new JSONObject(jsonObj);
+    	String body = reqJson.toString();
+    	RestClient<T> json = new RestClient<T>();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    	logger.info("url:"+url);
+    	logger.info("body:"+body);
+    	String resultJson = json.http(url, body);
+    	logger.info("resultJson:"+resultJson);
+
+    	Gson gson = new Gson();
+		Type type = new TypeToken<ResultObj<T>>() {}.getType();
+		ResultObj<T> result = gson.fromJson(resultJson, type);
+
+		logger.debug("result = "+result.toString());
+    	return result;
+    }
+
+    public String http(String url, String body) {
+    	String resultJson="";
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpPost request = new HttpPost(url);
+            StringEntity params = new StringEntity(body, ContentType.APPLICATION_JSON);
+            //request.addHeader("Content-type", "charset=UTF-8");
+            request.setEntity(params);
+            HttpResponse result = httpClient.execute(request);
+
+            resultJson = EntityUtils.toString(result.getEntity(), "UTF-8");
+            logger.debug(resultJson);
+
+        } catch (IOException ex) {
+        	ex.printStackTrace();
+        }
+        return resultJson;
+    }
+    
+	public ResultObj<T> callGetHttp(String url) {
+		String resultJson = "";
+		ResultObj<T> result = null;
+		try (CloseableHttpClient httpclient = HttpClients.custom().build()){
+			Thread.sleep(1000);
+		//    String userCredentials = "username:password";
+		//    String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
+		    HttpGet httpget = new HttpGet(url);
+		//    httpget.setHeader("Authorization", basicAuth);
+		    httpget.setHeader("Content-Type", "text/html");
+	    	logger.info("url:"+url);
+		    CloseableHttpResponse response = httpclient.execute(httpget);
+
+            resultJson = EntityUtils.toString(response.getEntity(), "UTF-8");
+           
+        	logger.info("resultJson:"+resultJson);
+
+        	Gson gson = new Gson();
+    		Type type = new TypeToken<ResultObj<T>>() {}.getType();
+    		result = gson.fromJson(resultJson, type);
+
+    		logger.debug("result = "+result.toString());
+        	return result;
+        } catch (IOException | InterruptedException ex) {
+        	ex.printStackTrace();
+		}
+	    return result;
+	}
+}
