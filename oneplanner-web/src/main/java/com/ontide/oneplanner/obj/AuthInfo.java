@@ -7,6 +7,7 @@ public class AuthInfo implements Serializable {
 	private static final long serialVersionUID = 1608563172112405778L;
 	String userId;
 	String authId;
+	String authMode;
 	String comfirmYn;
 	String expiredDate;
 	String createDate;
@@ -27,6 +28,14 @@ public class AuthInfo implements Serializable {
 
 	public void setAuthId(String authId) {
 		this.authId = authId;
+	}
+
+	public String getAuthMode() {
+		return authMode;
+	}
+
+	public void setAuthMode(String authMode) {
+		this.authMode = authMode;
 	}
 
 	public String getComfirmYn() {
@@ -54,7 +63,7 @@ public class AuthInfo implements Serializable {
 	}
 
 	public String toString() {
-		return String.format("userId[%s]authId[%s]comfirmYn[%s]expiredDate[%s]createDate[%s]"
-				,userId,authId,comfirmYn,expiredDate,createDate);
+		return String.format("userId[%s]authId[%s]authMode[%s]comfirmYn[%s]expiredDate[%s]createDate[%s]"
+				,userId,authId,authMode,comfirmYn,expiredDate,createDate);
 	}
 }

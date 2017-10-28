@@ -240,6 +240,73 @@ public class ScheduleInfoDAOImpl implements ScheduleInfoDAO {
 		});
 	}
 	
+	public List<ScheduleInfo> getListWeb(Map<String,String> params) throws Exception {
+		String orderBy = "";
+		int recordCntPerPage = 0;
+		int pageIndex = 0;
+		String sql = "SELECT @rownum:=@rownum + 1 as row_number,t.*  FROM (" 
+				+" SELECT user_id,schedule_id,schedule_name,start_date,end_date"
+				+",memo,task_id,participants,location,location_url"
+				+",alarm_yn,complete_yn,delete_yn, days, weeks"
+				+",start_time, end_time, group_id, alarm_period, repeat_end_date"
+				+" FROM schedule_info where user_id = ? ";
+		String userId = "";
+		for (Entry<String, String> entry : params.entrySet()) {
+			if  ("".equals(entry.getValue())) continue;
+			if (entry.getKey().equals("userId")) 
+				userId = entry.getValue();
+			if (entry.getKey().equals("userName"))
+				sql += " and user_name like '%"+entry.getValue()+"%'";
+			if (entry.getKey().equals("taskId")) 
+				sql += " and task_id like '%"+entry.getValue()+"%'";
+			if (entry.getKey().equals("deleteYn"))
+				sql += " and delete_yn = '"+entry.getValue()+"'";
+			if (entry.getKey().equals("orderBy")&&!entry.getValue().trim().equals(""))
+				orderBy = entry.getValue();
+			if (entry.getKey().equals("recCntPerPage")&&!entry.getValue().trim().equals(""))
+				recordCntPerPage= Integer.parseInt(entry.getValue());
+			if (entry.getKey().equals("pageIndex")&&!entry.getValue().trim().equals(""))
+				pageIndex = Integer.parseInt(entry.getValue());
+		}
+		sql +=" ) t, (SELECT @rownum := 0) r ";
+
+		if (!"".equals(orderBy))
+			sql += " order by "+orderBy;
+		sql += "limit "+recordCntPerPage+" offset "+pageIndex;
+
+		logger.debug("getList: userId["+userId+"]sql:"+sql);
+		
+		List<ScheduleInfo> listScheduleInfo = jdbcTemplate.query(sql, new RowMapper<ScheduleInfo>(){
+			@Override
+			public ScheduleInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ScheduleInfo scheduleInfo = new ScheduleInfo();
+				scheduleInfo.setUserId(rs.getString("user_id"));
+				scheduleInfo.setScheduleId(rs.getString("schedule_id"));
+				scheduleInfo.setScheduleName(rs.getString("schedule_name"));
+				scheduleInfo.setStartDate(rs.getString("start_date"));
+				scheduleInfo.setEndDate(rs.getString("end_date"));
+				scheduleInfo.setMemo(rs.getString("memo"));
+				scheduleInfo.setTaskId(rs.getString("task_id"));
+				scheduleInfo.setParticipants(rs.getString("participants"));
+				scheduleInfo.setLocation(rs.getString("location"));
+				scheduleInfo.setLocationUrl(rs.getString("location_url"));
+				scheduleInfo.setAlarmYn(rs.getString("alarm_yn"));
+				scheduleInfo.setCompleteYn(rs.getString("complete_yn"));
+				scheduleInfo.setDeleteYn(rs.getString("delete_yn"));
+				scheduleInfo.setDays(rs.getString("days"));
+				scheduleInfo.setWeeks(rs.getString("weeks"));
+				scheduleInfo.setStartTime(rs.getString("start_time"));
+				scheduleInfo.setEndTime(rs.getString("end_time"));
+				scheduleInfo.setGroupId(rs.getString("group_id"));
+				scheduleInfo.setAlarmPeriod(rs.getString("alarm_period"));
+				scheduleInfo.setRepeatEndDate(rs.getString("repeat_end_date"));
+				return scheduleInfo;
+			}
+		}, userId);
+		return listScheduleInfo;
+
+	}
+
 	public List<ScheduleInfo> getList(Map<String,String> params) throws Exception {
 		String sql = " SELECT user_id,schedule_id,schedule_name,start_date,end_date"
 				+",memo,task_id,participants,location,location_url"
@@ -290,7 +357,6 @@ public class ScheduleInfoDAOImpl implements ScheduleInfoDAO {
 		return listScheduleInfo;
 
 	}
-
 	
 	public int getCnt(Map<String,String> params) throws Exception {
 		String sql = "SELECT count(*) "

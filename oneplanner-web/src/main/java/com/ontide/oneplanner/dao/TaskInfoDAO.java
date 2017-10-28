@@ -16,5 +16,6 @@ public interface TaskInfoDAO {
 	public int deleteFromTasks(Map<String,String> params) throws Exception ;
 	public TaskInfoOut get(String userId, String taskId) throws Exception ;
 	public List<TaskInfoOut> getList(Map<String,String> params) throws Exception ;
+	public List<TaskInfoOut> getListWeb(Map<String,String> params) throws Exception ;
 	public int getCnt(Map<String,String> params) throws Exception ;
 }

@@ -515,6 +515,24 @@ public class JsonHandler {
 	}
 
 	/**
+	 * 투데이 등록. image file업로드를 하지 않는 경우
+	 * 0001 Success
+ 	 * 1001 Already Exist
+	 * 9999 Unknown Error
+	 * @param today
+	 * @return
+	 */
+	public ResultObj<String> callRegisterToday(TodayInfo today) {
+		String url = this.url + "/today/admin/register/json";
+		RestClient<String> caller = new RestClient<String>();
+		Type type = new TypeToken<ResultObj<String>>() {}.getType();
+		ResultObj<String> result = caller.callJsonHttp(url, today, type);
+		logger.debug("callRegisterToday today["+today+"]result["+result+"]");
+		return result;
+	}
+
+	
+	/**
 	 * 투데이  조회
 	 * 0001 Success
 	 * 4301 Today Not Found
@@ -542,7 +560,7 @@ public class JsonHandler {
 	public ResultObj<List<TodayInfo>> callCheckoutToday(TodayInfo today) {
 		String url = this.url + "/today/checkout";
 		RestClient<List<TodayInfo>> caller = new RestClient<List<TodayInfo>>();
-		Type type = new TypeToken<ResultObj<TodayInfo>>() {}.getType();
+		Type type = new TypeToken<ResultObj<List<TodayInfo>>>() {}.getType();
 		ResultObj<List<TodayInfo>> result = caller.callJsonHttp(url, today, type);
 		logger.debug("callGetToday today["+today+"]result["+result+"]");
 		return  result;
@@ -556,8 +574,25 @@ public class JsonHandler {
 	 * @param today
 	 * @return
 	 */
-	public ResultObj<String> callUpdateToday(TodayInfo today) {
+	public ResultObj<String> callUpdateToday(TodayInfo today,String filePath) {
 		String url = this.url + "/today/admin/update";
+		RestClient<String> caller = new RestClient<String>();
+		Type type = new TypeToken<ResultObj<String>>() {}.getType();
+		ResultObj<String> result = caller.callMultipartHttp(url, filePath, today, type);
+		logger.debug("callUpdateToday today["+today+"]result["+result+"]");
+		return  result;
+	}
+
+	/**
+	 * 투데이  변경. image file upload가 없는 경우
+	 * 0001 Success
+	 * 4301 Today Not Found
+	 * 9999 Unknown Error
+	 * @param today
+	 * @return
+	 */
+	public ResultObj<String> callUpdateToday(TodayInfo today) {
+		String url = this.url + "/today/admin/update/json";
 		RestClient<String> caller = new RestClient<String>();
 		Type type = new TypeToken<ResultObj<String>>() {}.getType();
 		ResultObj<String> result = caller.callJsonHttp(url, today, type);

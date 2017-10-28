@@ -1,0 +1,32 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>One planner 비밀번호 초기화</title> 
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 14px;line-height: 1.42857143;color: #333;background-color: #fff;}
+.panel {margin-top: 5px;margin-bottom: 20px;background-color: #fff;border: 1px solid transparent;border-radius: 4px;-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);box-shadow: 0 1px 1px rgba(0,0,0,.05);}
+.panel-info {border-color: #bce8f1;}
+.panel-heading {color: #31708f;background-color: #d9edf7;border-color: #bce8f1;padding: 10px 15px;border-bottom: 1px solid transparent;border-top-left-radius: 3px;border-top-right-radius: 3px;}
+.panel-body {padding: 15px;}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="panel panel-info">
+    <div class="panel-heading">One planner 비밀번호 초기화</div>
+    <div class="panel-body">${userName} 님,<br>
+      <br>
+      One planner를 이용해주셔서 감사합니다.<br>
+      <br>
+       요청하신 비밀번호 초기화를 처리하였습니다. 이후 로그인은 다음 임시비밀번호를 사용하십시요.<br>
+      <span style="color: #31708f;background-color: #d9edf7;">${passwd}</span><br>
+      <br>
+      로그인을 하면 비밀번호 변경 화면으로 이동하는데 비밀번호를 변경하는 것을 권장드립니다.</div>
+  </div>
+</div>
+</body>
+</html>

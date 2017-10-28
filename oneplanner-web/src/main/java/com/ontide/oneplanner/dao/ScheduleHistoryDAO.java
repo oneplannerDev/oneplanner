@@ -13,6 +13,7 @@ public interface ScheduleHistoryDAO {
 	public int setScheduleHistoriesDeleteFlag(Map<String,String> params) throws Exception ;
 	public int deleteFromScheduleHistories(Map<String,String> params) throws Exception ;
 	public ScheduleHistory get(ScheduleHistory scheduleHistory) throws Exception ;
+	public List<ScheduleHistory> getListWeb(Map<String,String> params) throws Exception ;
 	public List<ScheduleHistory> getList(Map<String,String> params) throws Exception ;
 	public int getCnt(Map<String,String> params) throws Exception ;
 }

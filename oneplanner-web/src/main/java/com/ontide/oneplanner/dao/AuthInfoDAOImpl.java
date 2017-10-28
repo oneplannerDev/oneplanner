@@ -32,10 +32,10 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 	public void create(AuthInfo authInfo) throws Exception {
 		if (!authInfo.getUserId().equals("")||!authInfo.getAuthId().equals("")) {
 			//insert
-			String sql = "INSERT INTO auth_info (user_id,auth_id,expired_date, confirm_yn)"
-					+ " VALUES (?,?,DATE_FORMAT(NOW() + INTERVAL 1 DAY, \"%Y%m%d%H%i%s\"),?)";
+			String sql = "INSERT INTO auth_info (user_id,auth_id, auth_mode,confirm_yn,expired_date)"
+					+ " VALUES (?,?,?,?,DATE_FORMAT(NOW() + INTERVAL 1 DAY, \"%Y%m%d%H%i%s\"))";
 			logger.debug(String.format("insert:[%s] sql[%s]", authInfo, sql));
-			jdbcTemplate.update(sql, authInfo.getUserId(), authInfo.getAuthId(), authInfo.getComfirmYn());	
+			jdbcTemplate.update(sql, authInfo.getUserId(), authInfo.getAuthId(), authInfo.getAuthMode(),authInfo.getComfirmYn());	
 		} else {
 			throw new Exception(String.format("No key value userId[%s]authId[%s]"
 					, authInfo.getUserId(), authInfo.getAuthId()));
@@ -47,10 +47,12 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 		if (!authInfo.getUserId().equals("")||!authInfo.getAuthId().equals("")) {
 			//update
 			String sql = "UPDATE auth_info SET confirm_yn = ? "
+					+ " , auth_mode = ?"
 					+ " , update_date = now()"
 					+ "WHERE user_id = ? and auth_id = ? ";
 			logger.debug(String.format("update:[%s] sql[%s]", authInfo, sql));
-			jdbcTemplate.update(sql, authInfo.getComfirmYn(), authInfo.getUserId(), authInfo.getAuthId());	
+			jdbcTemplate.update(sql, authInfo.getComfirmYn(), authInfo.getAuthMode()
+					, authInfo.getUserId(), authInfo.getAuthId());	
 		} else {
 			throw new Exception(String.format("No key value userId[%s]authId[%s]"
 					, authInfo.getUserId(), authInfo.getAuthId()));
@@ -71,7 +73,7 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 
 	@Override
 	public AuthInfo get(String userId, String authId) {
-		String sql = "SELECT user_id, auth_id,expired_date, confirm_yn"
+		String sql = "SELECT user_id, auth_id,expired_date, confirm_yn, auth_mode"
 				+" FROM auth_info where user_id ='"+userId+"' and auth_id = '"+authId+"'";
 		logger.info("get: sql:"+sql);
 		return jdbcTemplate.query(sql, new ResultSetExtractor<AuthInfo>(){
@@ -82,6 +84,7 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 					authInfo.setUserId(rs.getString("user_id"));
 					authInfo.setAuthId(rs.getString("auth_id"));
 					authInfo.setExpiredDate(rs.getString("expired_date"));
+					authInfo.setAuthMode(rs.getString("auth_mode"));
 					authInfo.setComfirmYn(rs.getString("confirm_yn"));
 					return authInfo;
 				}
@@ -92,7 +95,7 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 	}
 	
 	public List<AuthInfo> getList(Map<String,String> params) throws Exception {
-		String sql = "SELECT user_id, auth_id, expired_date, confirm_yn"
+		String sql = "SELECT user_id, auth_id, expired_date, confirm_yn, auth_mode"
 				+" FROM auth_info where 1 = 1";
 
 		for (Entry<String, String> entry : params.entrySet()) {
@@ -110,6 +113,7 @@ public class AuthInfoDAOImpl implements AuthInfoDAO {
 				authInfo.setAuthId(rs.getString("auth_id"));
 				authInfo.setExpiredDate(rs.getString("expired_date"));
 				authInfo.setComfirmYn(rs.getString("confirm_yn"));
+				authInfo.setComfirmYn(rs.getString("auth_mode"));
 				return authInfo;
 			}
 		});

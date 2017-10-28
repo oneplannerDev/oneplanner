@@ -5,23 +5,33 @@
 	<groupId>com.ontide</groupId>
 	<name>OnePlanner</name>
 	<packaging>${deployed.filename}</packaging>
-	<version>1.0.0</version>
+	<version>${deployed.version}</version>
 	<profiles>
 		<profile>
 			<id>prod</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
 				<deployed.filename>war</deployed.filename>
+				<deployed.version>1.0.1</deployed.version>
 				<properties.dirname>/profile/prod</properties.dirname>
 			</properties>
 		</profile>
 		<profile>
 			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<deployed.filename>war</deployed.filename>
+				<deployed.version>1.0.1.dev</deployed.version>
 				<properties.dirname>/profile/dev</properties.dirname>
+			</properties>
+		</profile>
+		<profile>
+			<id>local</id>
+			<properties>
+				<deployed.filename>war</deployed.filename>
+				<deployed.version>1.0.1.dev</deployed.version>
+				<properties.dirname>/profile/local</properties.dirname>
 			</properties>
 		</profile>
 		<profile>

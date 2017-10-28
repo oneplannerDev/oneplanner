@@ -14,8 +14,12 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.ontide.oneplanner.dao.AdminInfoDAO;
+import com.ontide.oneplanner.dao.AdminInfoDAOImpl;
 import com.ontide.oneplanner.dao.AuthInfoDAO;
 import com.ontide.oneplanner.dao.AuthInfoDAOImpl;
+import com.ontide.oneplanner.dao.MailingHistoryDAO;
+import com.ontide.oneplanner.dao.MailingHistoryDAOImpl;
 import com.ontide.oneplanner.dao.ScheduleHistoryDAO;
 import com.ontide.oneplanner.dao.ScheduleHistoryDAOImpl;
 import com.ontide.oneplanner.dao.ScheduleInfoDAO;
@@ -91,5 +95,13 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 	@Bean
 	public TodayInfoDAO getTodayInfoDAO() {
 		return new TodayInfoDAOImpl(dataSource);
+	}
+	@Bean
+	public AdminInfoDAO getAdminInfoDAO() {
+		return new AdminInfoDAOImpl(dataSource);
+	}
+	@Bean
+	public MailingHistoryDAO getMailingHistoryDAO() {
+		return new MailingHistoryDAOImpl(dataSource);
 	}
 }

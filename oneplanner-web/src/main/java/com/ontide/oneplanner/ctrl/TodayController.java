@@ -27,6 +27,7 @@ import com.ontide.oneplanner.dao.EnvironmentBean;
 import com.ontide.oneplanner.dao.TodayInfoDAO;
 import com.ontide.oneplanner.dao.UserInfoDAO;
 import com.ontide.oneplanner.etc.ReturnCode;
+import com.ontide.oneplanner.etc.Utils;
 import com.ontide.oneplanner.io.ResultObj;
 import com.ontide.oneplanner.obj.TodayInfo;
 import com.ontide.oneplanner.obj.UserInfo;
@@ -67,19 +68,25 @@ public class TodayController {
 		TransactionStatus txStatus = transactionManager.getTransaction(txDef);
 
 		try {
-			logger.info("##################################################");
-			Map<String, String> env = System.getenv();
-	        for (String envName : env.keySet()) {
-	        	logger.info(String.format("%s=%s", envName, env.get(envName)));
-	        }
-	        //System.getProperty("work.path")
-			logger.info("##################################################");
-			Properties props = System.getProperties();
-	        for (Object envName : props.keySet()) {
-	        	logger.info(String.format("%s=%s", envName, System.getProperty((String)envName)));
-	        }
-			logger.info("##################################################");
-
+//			logger.info("##################################################");
+//			Map<String, String> env = System.getenv();
+//	        for (String envName : env.keySet()) {
+//	        	logger.info(String.format("%s=%s", envName, env.get(envName)));
+//	        }
+//	        //System.getProperty("work.path")
+//			logger.info("##################################################");
+//			Properties props = System.getProperties();
+//	        for (Object envName : props.keySet()) {
+//	        	logger.info(String.format("%s=%s", envName, System.getProperty((String)envName)));
+//	        }
+//			logger.info("##################################################");
+			if (todayInfo.getToday() == null) {
+				todayInfo.setToday(	Utils.YYYYMMDD());
+			}
+			if (todayInfo.getContSeq() == null) {
+				int seq = todayInfoDAO.getMaxSeq(todayInfo.getToday());
+				todayInfo.setContSeq(Integer.toString(seq));
+			}
 			// save file
 			String uploadFileName = fileService.getSaveFileName(multipartFile, todayInfo.getToday(), todayInfo.getContSeq());
 			String savedFilePath = fileService.getSaveFilePath(todayInfo.getToday(),uploadFileName);
@@ -119,14 +126,116 @@ public class TodayController {
 		return result;
 	}
 	
-		
 	/**
 	 * 투데이 변경
 	 */
-	@RequestMapping(value="/admin/update", method=RequestMethod.POST, consumes={"application/json"})
-	public @ResponseBody ResultObj<TodayInfo> updateToday(@RequestBody TodayInfo todayInfo) {
+	@RequestMapping(value="/admin/register/json", method=RequestMethod.POST, consumes={"application/json"})
+	public @ResponseBody ResultObj<TodayInfo> registerTodayJson(@RequestBody TodayInfo todayInfo) {
 		long startMilSec = (new Date()).getTime();
-		logger.info("updateToday:"+todayInfo);
+		logger.info("registerTodayJson:"+todayInfo);
+
+		TransactionDefinition txDef = new DefaultTransactionDefinition();
+		TransactionStatus txStatus = transactionManager.getTransaction(txDef);
+
+		ResultObj<TodayInfo> result =  new ResultObj<TodayInfo>();
+
+		try {
+			if (todayInfo.getToday() == null) {
+				todayInfo.setToday(	Utils.YYYYMMDD());
+			}
+			if (todayInfo.getContSeq() == null) {
+				int seq = todayInfoDAO.getMaxSeq(todayInfo.getToday());
+				todayInfo.setContSeq(Integer.toString(seq));
+			}
+
+			todayInfoDAO.create(todayInfo);
+			result.setResultCode(ReturnCode.SUCCESS.get());
+			result.setResultMsg(ReturnCode.STR_SUCCESS.get());
+			//result.setItem(todayInfo);
+			transactionManager.commit(txStatus);
+		} catch (DuplicateKeyException de){
+			logger.error("registerTodayJson failed.",de);
+			transactionManager.rollback(txStatus);
+			result.setResultCode(ReturnCode.ALREADY_EXISTS.get());
+			result.setResultMsg(ReturnCode.STR_ALREADY_EXISTS.get());
+		} catch (Exception e) {
+			logger.error("registerTodayJson failed.",e);
+			transactionManager.rollback(txStatus);
+			result.setResultCode(ReturnCode.ERROR_UNKNOWN.get());
+			result.setResultMsg(ReturnCode.STR_ERROR_UNKNOWN.get());
+		}
+		logger.info("registerTodayJson:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+todayInfo);
+		return result;
+	}
+		
+	@RequestMapping(value="/admin/update", method=RequestMethod.POST, consumes={"multipart/form-data"})
+	public @ResponseBody ResultObj<String> updateToday(@RequestPart("json") TodayInfo todayInfo,@RequestPart("upfile") MultipartFile multipartFile) {
+		long startMilSec = (new Date()).getTime();
+		logger.info("registerToday:"+todayInfo);
+		//1.overwrite여부
+		//overwrite Y이면 신규 생성
+		//overwrite N이면 존재여부 확인
+		ResultObj<String> result =  new ResultObj<String>();
+		TransactionDefinition txDef = new DefaultTransactionDefinition();
+		TransactionStatus txStatus = transactionManager.getTransaction(txDef);
+
+		try {
+//			logger.info("##################################################");
+//			Map<String, String> env = System.getenv();
+//	        for (String envName : env.keySet()) {
+//	        	logger.info(String.format("%s=%s", envName, env.get(envName)));
+//	        }
+//	        //System.getProperty("work.path")
+//			logger.info("##################################################");
+//			Properties props = System.getProperties();
+//	        for (Object envName : props.keySet()) {
+//	        	logger.info(String.format("%s=%s", envName, System.getProperty((String)envName)));
+//	        }
+//			logger.info("##################################################");
+			if (todayInfo.getToday() == null||todayInfo.getContSeq() == null) {
+				throw new Exception("Invalid today key");
+			}
+			// save file
+			String uploadFileName = fileService.getSaveFileName(multipartFile, todayInfo.getToday(), todayInfo.getContSeq());
+			String savedFilePath = fileService.getSaveFilePath(todayInfo.getToday(),uploadFileName);
+			String savedFileUrl = fileService.getSaveFileUrl(todayInfo.getToday(),uploadFileName);
+
+			
+			//ReqUserInfo userInfo = new ReqUserInfo();
+			long fileSize = multipartFile.getSize();
+			String fileName = multipartFile.getOriginalFilename();
+			System.out.println("imagefileup:fileName="+fileName);
+			System.out.println("imagefileup:fileSize="+fileSize);
+			
+			if (!fileService.saveFile(multipartFile,todayInfo.getToday(),savedFilePath)) {
+				result.setResultCode(ReturnCode.ERROR_FILEUP.get());
+				result.setResultMsg(ReturnCode.STR_ERROR_FILEUP.get());
+				transactionManager.rollback(txStatus);
+				logger.info("updateToday:end:"+((new Date()).getTime()-startMilSec)+":"+todayInfo+":"+result);
+				return result;
+			}			
+			todayInfo.setImageUrl(savedFileUrl);
+			todayInfoDAO.update(todayInfo);
+			result.setResultCode(ReturnCode.SUCCESS.get());
+			result.setResultMsg(ReturnCode.STR_SUCCESS.get());
+			result.setItem(savedFileUrl);
+			transactionManager.commit(txStatus);
+		} catch (Exception e) {
+			logger.error("updateToday failed.",e);
+			transactionManager.rollback(txStatus);
+			result.setResultCode(ReturnCode.ERROR_UNKNOWN.get());
+			result.setResultMsg(ReturnCode.STR_ERROR_UNKNOWN.get());
+		}
+		logger.info("updateToday:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+todayInfo);
+		return result;
+	}
+	/**
+	 * 투데이 변경
+	 */
+	@RequestMapping(value="/admin/update/json", method=RequestMethod.POST, consumes={"application/json"})
+	public @ResponseBody ResultObj<TodayInfo> updateTodayJson(@RequestBody TodayInfo todayInfo) {
+		long startMilSec = (new Date()).getTime();
+		logger.info("updateTodayJson:"+todayInfo);
 		//1.overwrite여부
 		//overwrite Y이면 신규 생성
 		//overwrite N이면 존재여부 확인
@@ -145,12 +254,12 @@ public class TodayController {
 			//result.setItem(todayInfo);
 			transactionManager.commit(txStatus);
 		} catch (Exception e) {
-			logger.error("updateToday failed.",e);
+			logger.error("updateTodayJson failed.",e);
 			transactionManager.rollback(txStatus);
 			result.setResultCode(ReturnCode.ERROR_UNKNOWN.get());
 			result.setResultMsg(ReturnCode.STR_ERROR_UNKNOWN.get());
 		}
-		logger.info("updateToday:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+todayInfo);
+		logger.info("updateTodayJson:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+todayInfo);
 		return result;
 	}
 	/**
@@ -214,6 +323,7 @@ public class TodayController {
 		logger.info("getTodayInfo:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+todayInfo);
 		return result;
 	}
+
 	/**
 	 *	오늘 전체 다운로드(user id별 조회)
 	 */

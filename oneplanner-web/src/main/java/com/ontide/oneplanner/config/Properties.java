@@ -9,10 +9,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 
+import com.ontide.oneplanner.dao.AdminInfoDAO;
 import com.ontide.oneplanner.dao.EnvironmentBean;
+import com.ontide.oneplanner.obj.AdminInfo;
 
 @Configuration
-@PropertySource("classpath:config.properties.prod")
+@PropertySource("classpath:config.properties")
 public class Properties {
 
 //	@Value("$(domain.name)")
@@ -20,8 +22,10 @@ public class Properties {
 	@Autowired
 	private Environment env;
 	
+	@Autowired AdminInfoDAO adminInfoDAO;
+	
 	@Bean
-	public EnvironmentBean environmentBean() throws UnsupportedEncodingException {
+	public EnvironmentBean environmentBean() throws Exception {
 		EnvironmentBean envBean = new EnvironmentBean();
 		envBean.setDomainName(env.getProperty("domain.name"));
 		envBean.setDomainIp(env.getProperty("domain.ip"));
@@ -31,8 +35,10 @@ public class Properties {
 		envBean.setMailPassword(env.getProperty("mail.password"));
 		envBean.setMailSmtpHost(env.getProperty("mail.smtp.host"));
 		envBean.setMailSmtpPort(Integer.parseInt(env.getProperty("mail.smtp.port")));
-		envBean.setMailFromMail(env.getProperty("mail.from.mail"));
+		AdminInfo adminInfo = adminInfoDAO.get("admin");
+		envBean.setMailFromMail(adminInfo.getEmail());//env.getProperty("mail.from.mail"));
 		envBean.setMailSubscAuthUrl(env.getProperty("mail.subscr.auth.url"));
+		envBean.setMailPasswdResetUrl(env.getProperty("mail.passwd.reset.url"));
 		envBean.setMailSubscAuthTitleKo(new String(env.getProperty("mail.subscr.auth.title.ko").getBytes("ISO-8859-1"), "UTF-8"));
 		envBean.setMailSubscAuthTitleEn(new String(env.getProperty("mail.subscr.auth.title.en").getBytes("ISO-8859-1"), "UTF-8"));
 		envBean.setMailSubscAuthContentKo(new String(env.getProperty("mail.subscr.auth.content.ko").getBytes("ISO-8859-1"), "UTF-8"));
@@ -41,6 +47,10 @@ public class Properties {
 		envBean.setMailPasswordResetTitleEn(new String(env.getProperty("mail.passwd.reset.title.en").getBytes("ISO-8859-1"), "UTF-8"));
 		envBean.setMailpasswordResetContentKo(new String(env.getProperty("mail.passwd.reset.content.ko").getBytes("ISO-8859-1"), "UTF-8"));
 		envBean.setMailpasswordResetContentEn(new String(env.getProperty("mail.passwd.reset.content.en").getBytes("ISO-8859-1"), "UTF-8"));		
+		envBean.setMailPasswordResetConfirmTitleKo(new String(env.getProperty("mail.passwd.reset.confirm.title.ko").getBytes("ISO-8859-1"), "UTF-8"));
+		envBean.setMailPasswordResetConfirmTitleEn(new String(env.getProperty("mail.passwd.reset.confirm.title.en").getBytes("ISO-8859-1"), "UTF-8"));
+		envBean.setMailpasswordResetConfirmContentKo(new String(env.getProperty("mail.passwd.reset.confirm.content.ko").getBytes("ISO-8859-1"), "UTF-8"));
+		envBean.setMailpasswordResetConfirmContentEn(new String(env.getProperty("mail.passwd.reset.confirm.content.en").getBytes("ISO-8859-1"), "UTF-8"));		
 /*		
 		mail.subscr.auth.title
 		mail.subscr.auth.content

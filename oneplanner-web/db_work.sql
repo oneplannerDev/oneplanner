@@ -10,11 +10,26 @@ CREATE DATABASE oneplandb;
 
 use oneplandb;
 
+/* test용 database*/
+CREATE USER 'devontide'@'%' IDENTIFIED BY 'Ontide01^';
+CREATE USER 'devontide'@'localhost' IDENTIFIED BY 'Ontide01^';
+CREATE USER 'devontide'@'127.0.0.1' IDENTIFIED BY 'Ontide01^';
+CREATE USER 'devontide'@'::1' IDENTIFIED BY 'Ontide01^';
+GRANT ALL PRIVILEGES ON *.* TO 'devontide'@'%';
+GRANT ALL PRIVILEGES ON *.* TO 'devontide'@'localhost';
+FLUSH PRIVILEGES;
+
+CREATE DATABASE devoneplandb;
+
+use devoneplandb;
+
+
 /* drop tables */
 drop table user_info;
 drop table task_info;
 drop table schedule_info;
 drop table schedule_history;
+drop table admin_info;
 
 
 CREATE TABLE user_info (
@@ -31,13 +46,37 @@ CREATE TABLE user_info (
  time_zone varchar(50) NOT NULL, /* Asia/Seoul ref: https://gist.github.com/arpit/1035596 */
  lang_code char(2) default 'ko', /* 한국어(기본값):ko, 영어:en */
  widget_option char(8) default '00000000', /* bitoption : Hexa value */
- auth_yn char(1) default 'N', /* email auth Y : default N*/
+ auth_yn char(1) default 'N', /* 등록 이메일 인증  Y : default N*/
  delete_yn char(1) default 'N', /* 삭제여부 Y/N */
+ auth_mode char(1) default 'N', /* 가입인증메일전송:A,가입증확인:Y,  비번리셋확인메일전송:R, 비번리셋완료:S */
+ confirm_date char(14) NULL,
  create_date  datetime default  now(),
  update_date  datetime default  now(),
  PRIMARY KEY (user_id),
  KEY idx_user_info_01 (user_id, user_type),
  KEY idx_user_info_02 (user_id, sex)
+) ENGINE=InnoDB DEFAULT CHARSET=euckr;
+
+CREATE TABLE auth_info (    
+ user_id varchar(200) NOT NULL, /* id, email address*/
+ auth_id varchar(1024) NOT NULL,
+ confirm_yn char(1) default 'N', 
+ auth_mode char(1), /* 가입인증메일전송:A,비번리셋메일전송:R */
+ expired_date char(14) NOT NULL,
+ update_date  datetime default  NOW(),
+ PRIMARY KEY (user_id, auth_id),
+ KEY idx_auth_info_01 (user_id, auth_mode)
+) ENGINE=InnoDB DEFAULT CHARSET=euckr;
+
+CREATE TABLE mailing_history (
+ user_id varchar(200) NOT NULL, /* id, email address*/
+ send_date char(14) NOT NULL,
+ auth_mode char(1) default 'A', /* 가입인증메일전송:A,가입증확인:Y, 비번리셋메일전송:R, 비번리셋완료:S  */
+ auth_id varchar(1024) NULL,
+ /* confirm_yn char(1) default 'N', */
+ create_date  datetime default  NOW(),
+ PRIMARY KEY (user_id, send_date),
+ KEY idx_mailing_history_01 (user_id, auth_mode)
 ) ENGINE=InnoDB DEFAULT CHARSET=euckr;
 
 CREATE TABLE task_info (
@@ -106,25 +145,25 @@ CREATE TABLE schedule_history (
  PRIMARY KEY (user_id, schedule_id, now_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=euckr;
 
-
-CREATE TABLE auth_info (    
- user_id varchar(200) NOT NULL, /* id, email address*/
- auth_id varchar(1024) NOT NULL,
- confirm_yn char(1) default 'N',
- expired_date char(14) NOT NULL,
- update_date  datetime default  NOW(),
- PRIMARY KEY (user_id, auth_id),
- KEY idx_auth_info_01 (user_id, confirm_yn)
-) ENGINE=InnoDB DEFAULT CHARSET=euckr;
-
 CREATE TABLE today_info (    
  today varchar(8) NOT NULL, /* yyyymmdd*/
  cont_seq int NOT NULL,
- content TEXT NOT NULL,
+ title TEXT NULL,
+ content TEXT NULL,
+ image_type char(1) NULL, /* I: 내부이미지파일, O:외부 이미지 파일 */
  image_url varchar(1024), 
  create_date  datetime default  now(),
  update_date  datetime default  now(),
  PRIMARY KEY (today, cont_seq)
+) ENGINE=InnoDB DEFAULT CHARSET=euckr;
+
+CREATE TABLE admin_info (    
+ user_id varchar(100) NOT NULL,
+ passwd  varchar(100) NOT NULL,
+ email  varchar(100) NOT NULL,
+ access_date  datetime default  now(),
+ update_date  datetime default  now(),
+ PRIMARY KEY (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=euckr;
 
 /*  테스트 데이터 */

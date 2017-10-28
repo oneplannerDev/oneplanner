@@ -15,5 +15,6 @@ public interface ScheduleInfoDAO {
 	public int deleteFromSchedules(Map<String,String> params) throws Exception ;
 	public ScheduleInfo get(String userId, String scheduleId) throws Exception ;
 	public List<ScheduleInfo> getList(Map<String,String> params) throws Exception ;
+	public List<ScheduleInfo> getListWeb(Map<String,String> params) throws Exception ;
 	public int getCnt(Map<String,String> params) throws Exception ;
 }

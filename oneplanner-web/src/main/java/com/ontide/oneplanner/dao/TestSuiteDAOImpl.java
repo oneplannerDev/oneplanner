@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.ontide.oneplanner.etc.Constant;
 import com.ontide.oneplanner.etc.Utils;
 import com.ontide.oneplanner.obj.UserInfo;
+import com.ontide.oneplanner.obj.UserInfoWeb;
 
 public class TestSuiteDAOImpl implements UserInfoDAO {
 	private static final Logger logger = LoggerFactory.getLogger(TestSuiteDAOImpl.class);
@@ -30,7 +31,7 @@ public class TestSuiteDAOImpl implements UserInfoDAO {
 	}
 	
 	@Override
-	public void create(UserInfo userInfo) throws Exception {
+	public void create(UserInfoWeb userInfo) throws Exception {
 		if (!userInfo.getUserId().equals("")) {
 			//insert
 			String sql = "INSERT INTO user_info (user_id,user_name,user_type,passwd,email"
@@ -155,6 +156,31 @@ public class TestSuiteDAOImpl implements UserInfoDAO {
 		});
 		return listUserInfo;
 
+	}
+
+	@Override
+	public List<UserInfoWeb> getListEx(Map<String, String> params)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getCnt(Map<String, String> params) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public UserInfoWeb getEx(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int update(UserInfoWeb userInfo) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

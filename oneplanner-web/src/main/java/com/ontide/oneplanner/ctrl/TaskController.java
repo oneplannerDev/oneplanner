@@ -305,6 +305,7 @@ public class TaskController {
 		logger.info("getTaskInfo:end:"+((new Date()).getTime()-startMilSec)+":"+result+":"+taskInfo);
 		return result;
 	}
+
 	/**
 	 *	태스크 전체 다운로드(user id별 조회)
 	 */

@@ -11,4 +11,7 @@ public interface TodayInfoDAO {
 	public int delete(String today, String contSeq) throws Exception ;
 	public TodayInfo get(String today, String contSeq) throws Exception ;
 	public List<TodayInfo> getList(Map<String,String> params) throws Exception ;
+	public List<TodayInfo> getListWeb(Map<String,String> params) throws Exception ;
+	public int getCnt(Map<String,String> params) throws Exception ;
+	public int getMaxSeq(String today) throws Exception;
 }

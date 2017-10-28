@@ -10,7 +10,9 @@ public class TodayInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	String today;
 	String contSeq;
+	String title;
 	String content;
+	String imageType;
 	String imageUrl;
 	String createDate;
 	String updateDate;
@@ -31,6 +33,22 @@ public class TodayInfo implements Serializable {
 
 	public void setContSeq(String contSeq) {
 		this.contSeq = contSeq;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 
 	public String getImageUrl() {
@@ -66,7 +84,7 @@ public class TodayInfo implements Serializable {
 	}
 
 	public String toString() {
-		return String.format("today[%s]contSeq[%s]imageUrl[%s]content[%s]createDate[%s]updateDate[%s]"
-				,today,  contSeq, imageUrl, content, createDate, updateDate);
+		return String.format("today[%s]contSeq[%s]title[%s]imageType[%s]imageUrl[%s]content[%s]createDate[%s]updateDate[%s]"
+				,today,  contSeq, title, imageType, imageUrl, content, createDate, updateDate);
 	}
 }

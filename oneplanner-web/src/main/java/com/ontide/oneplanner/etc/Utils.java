@@ -1,5 +1,6 @@
 package com.ontide.oneplanner.etc;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -61,5 +62,19 @@ public class Utils {
 			sb.append("["+item.toString()+"]");
 		}
 		return sb.toString();
+	}
+
+	public static String YYYYMMDD(){
+		return new java.text.SimpleDateFormat("yyyyMMdd").format(new Date());
+	}
+	public static String yyyyMMddHHmmss(){
+		return new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	}
+	
+	public static String unCamel(String str) {
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return str.replaceAll(regex, replacement)
+                           .toLowerCase();
 	}
 }

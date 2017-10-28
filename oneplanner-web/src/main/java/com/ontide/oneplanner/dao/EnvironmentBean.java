@@ -17,10 +17,16 @@ public class EnvironmentBean {
 	String mailSubscAuthTitleKo;
 	String mailSubscAuthContentEn;
 	String mailSubscAuthContentKo;
+	String mailPasswdResetUrl;
 	String mailPasswordResetTitleEn;
 	String mailPasswordResetTitleKo;
 	String mailpasswordResetContentEn;
 	String mailpasswordResetContentKo;
+	
+	String mailPasswordResetConfirmTitleEn;
+	String mailPasswordResetConfirmTitleKo;
+	String mailpasswordResetConfirmContentEn;
+	String mailpasswordResetConfirmContentKo;
 	/*		
 	mail.subscr.auth.url
 	mail.subscr.auth.title
@@ -104,10 +110,17 @@ public class EnvironmentBean {
 	}
 	public void setMailSubscAuthContentEn(String mailSubscAuthContentEn) {
 		this.mailSubscAuthContentEn = mailSubscAuthContentEn;
-	}
-	
+	}	
 	public void setMailSubscAuthContentKo(String mailSubscAuthContentKo) {
 		this.mailSubscAuthContentKo = mailSubscAuthContentKo;
+	}
+	
+	
+	public String getMailPasswdResetUrl() {
+		return mailPasswdResetUrl;
+	}
+	public void setMailPasswdResetUrl(String mailPasswdResetUrl) {
+		this.mailPasswdResetUrl = mailPasswdResetUrl;
 	}
 	public String getMailPasswordResetTitle(String langCode) {
 		return Constant.LANG_EN.get().equals(langCode)?mailPasswordResetTitleEn:mailPasswordResetTitleKo;
@@ -128,4 +141,22 @@ public class EnvironmentBean {
 		this.mailpasswordResetContentKo = mailpasswordResetContentKo;
 	}
 
+	public String getMailPasswordResetConfirmTitle(String langCode) {
+		return Constant.LANG_EN.get().equals(langCode)?mailPasswordResetConfirmTitleEn:mailPasswordResetConfirmTitleKo;
+	}
+	public void setMailPasswordResetConfirmTitleEn(String mailPasswordResetConfirmTitleEn) {
+		this.mailPasswordResetConfirmTitleEn = mailPasswordResetConfirmTitleEn;
+	}
+	public void setMailPasswordResetConfirmTitleKo(String mailPasswordResetConfirmTitleKo) {
+		this.mailPasswordResetConfirmTitleKo = mailPasswordResetConfirmTitleKo;
+	}
+	public String getMailpasswordResetConfirmContent(String langCode) {
+		return Constant.LANG_EN.get().equals(langCode)?mailpasswordResetConfirmContentEn:mailpasswordResetConfirmContentKo;
+	}
+	public void setMailpasswordResetConfirmContentEn(String mailpasswordResetConfirmContentEn) {
+		this.mailpasswordResetConfirmContentEn = mailpasswordResetConfirmContentEn;
+	}
+	public void setMailpasswordResetConfirmContentKo(String mailpasswordResetConfirmContentKo) {
+		this.mailpasswordResetConfirmContentKo = mailpasswordResetConfirmContentKo;
+	}
 }

@@ -122,6 +122,57 @@ public class ScheduleHistoryDAOImpl implements ScheduleHistoryDAO {
         , scheduleHistory.getScheduleId(), scheduleHistory.getNowDate());
 	}
 	
+	/**
+	 * 
+	 */
+	public List<ScheduleHistory> getListWeb(Map<String,String> params) throws Exception {
+		String orderBy = "";
+		int recordCntPerPage = 0;
+		int pageIndex = 0;
+		String sql = "SELECT @rownum:=@rownum + 1 as row_number,t.*  FROM (" 
+				+" SELECT user_id,schedule_id,now_date,start_date,end_date,complete_yn,delete_yn"
+				+" FROM schedule_history b where user_id = ? ";
+		String userId = "";
+		for (Entry<String, String> entry : params.entrySet()) {
+			if  ("".equals(entry.getValue())) continue;
+			if (entry.getKey().equals("userId")) 
+				userId = entry.getValue();
+			if (entry.getKey().equals("taskId")) 
+				sql += "and exists (select * from schedule_info a where a.user_id = b.user_id" 
+						+ "and a.schedule_id = b.schedule_id" 
+						+ "and a.task_id = "+entry.getValue()+")";
+			if (entry.getKey().equals("orderBy")&&!entry.getValue().trim().equals(""))
+				orderBy = entry.getValue();
+			if (entry.getKey().equals("recCntPerPage")&&!entry.getValue().trim().equals(""))
+				recordCntPerPage= Integer.parseInt(entry.getValue());
+			if (entry.getKey().equals("pageIndex")&&!entry.getValue().trim().equals(""))
+				pageIndex = Integer.parseInt(entry.getValue());
+		}
+		sql +=" ) t, (SELECT @rownum := 0) r ";
+		if (!"".equals(orderBy))
+			sql += " order by "+orderBy;
+		sql += "limit "+recordCntPerPage+" offset "+pageIndex;
+
+		logger.debug("getList: userId["+userId+"]sql:"+sql);
+		
+		List<ScheduleHistory> listscheduleHistory = jdbcTemplate.query(sql, new RowMapper<ScheduleHistory>(){
+			@Override
+			public ScheduleHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ScheduleHistory scheduleHistory = new ScheduleHistory();
+				scheduleHistory.setUserId(rs.getString("user_id"));
+				scheduleHistory.setScheduleId(rs.getString("schedule_id"));
+				scheduleHistory.setNowDate(rs.getString("now_date"));
+				scheduleHistory.setStartDate(rs.getString("start_date"));
+				scheduleHistory.setEndDate(rs.getString("end_date"));
+				scheduleHistory.setCompleteYn(rs.getString("complete_yn"));
+				scheduleHistory.setDeleteYn(rs.getString("delete_yn"));
+				return scheduleHistory;
+			}
+		},userId);
+		return listscheduleHistory;
+
+	}
+
 	public List<ScheduleHistory> getList(Map<String,String> params) throws Exception {
 		String sql = " SELECT user_id,schedule_id,now_date,start_date,end_date,complete_yn,delete_yn"
 				+" FROM schedule_history b where user_id = ? ";
@@ -154,7 +205,7 @@ public class ScheduleHistoryDAOImpl implements ScheduleHistoryDAO {
 		return listscheduleHistory;
 
 	}
-
+	
 	@Override
 	public void create(List<ScheduleHistory> scheduleHistoryList)
 			throws Exception {

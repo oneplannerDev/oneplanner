@@ -215,6 +215,65 @@ public class TaskInfoDAOImpl implements TaskInfoDAO {
 		});
 	}
 	
+	public List<TaskInfoOut> getListWeb(Map<String,String> params) throws Exception {
+		String orderBy = "";
+		int recordCntPerPage = 0;
+		int pageIndex = 0;
+		String sql = "SELECT @rownum:=@rownum + 1 as row_number,t.*  FROM (" 
+				+"SELECT user_id,task_id,task_name,task_type "
+				+",start_date,end_date,frequency_cnt,frequency_period,progress,participants,color,days,weeks,start_time,end_time,delete_yn "
+				+" FROM task_info where user_id = ?";
+		String userId = "";
+		for (Entry<String, String> entry : params.entrySet()) {
+			if  ("".equals(entry.getValue())) continue;
+			if (entry.getKey().equals("userId")) 
+				userId = entry.getValue();
+			if (entry.getKey().equals("userName"))
+				sql += " and user_name like '%"+entry.getValue()+"%'";
+			if (entry.getKey().equals("deleteYn"))
+				sql += " and delete_yn = '"+entry.getValue()+"'";
+			if (entry.getKey().equals("orderBy")&&!entry.getValue().trim().equals(""))
+				orderBy = entry.getValue();
+			if (entry.getKey().equals("recCntPerPage")&&!entry.getValue().trim().equals(""))
+				recordCntPerPage= Integer.parseInt(entry.getValue());
+			if (entry.getKey().equals("pageIndex")&&!entry.getValue().trim().equals(""))
+				pageIndex = Integer.parseInt(entry.getValue());
+		}
+		sql +=" ) t, (SELECT @rownum := 0) r ";
+
+		if (!"".equals(orderBy))
+			sql += " order by "+orderBy;
+		sql += "limit "+recordCntPerPage+" offset "+pageIndex;
+
+		logger.debug("getList: userId["+userId+"]sql:"+sql);
+		
+		List<TaskInfoOut> listTaskInfo = jdbcTemplate.query(sql, new RowMapper<TaskInfoOut>(){
+			@Override
+			public TaskInfoOut mapRow(ResultSet rs, int rowNum) throws SQLException {
+				TaskInfoOut taskInfo = new TaskInfoOut();
+				taskInfo.setUserId(rs.getString("user_id"));
+				taskInfo.setTaskId(rs.getString("task_id"));
+				taskInfo.setTaskName(rs.getString("task_name"));
+				taskInfo.setTaskType(rs.getString("task_type"));
+				taskInfo.setStartDate(rs.getString("start_date"));
+				taskInfo.setEndDate(rs.getString("end_date"));
+				taskInfo.setFrequencyCnt(rs.getInt("frequency_cnt"));
+				taskInfo.setFrequencyPeriod(rs.getString("frequency_period"));
+				taskInfo.setProgress(rs.getInt("progress"));
+				taskInfo.setParticipants(rs.getString("participants"));
+				taskInfo.setColor(rs.getInt("color"));
+				taskInfo.setDays(rs.getString("days"));
+				taskInfo.setWeeks(rs.getString("weeks"));
+				taskInfo.setStartTime(rs.getString("start_time"));
+				taskInfo.setEndTime(rs.getString("end_time"));
+				taskInfo.setDeleteYn(rs.getString("delete_yn"));
+				return taskInfo;
+			}
+		}, userId);
+		return listTaskInfo;
+
+	}
+	
 	public List<TaskInfoOut> getList(Map<String,String> params) throws Exception {
 		String sql = "SELECT user_id,task_id,task_name,task_type "
 				+",start_date,end_date,frequency_cnt,frequency_period,progress,participants,color,days,weeks,start_time,end_time,delete_yn "

@@ -9,8 +9,9 @@ import com.ontide.oneplanner.obj.TodayInfo;
 import com.ontide.oneplanner.obj.UserInfo;
 
 public class TestObj {
-	//public final String URL = "http://localhost:8081/oneplanner/";
-	public final String URL = "http://13.124.1.173:8080/oneplanner/";
+	public final String URL = "http://localhost:8081/oneplanner/";
+	//public final String URL = "http://13.124.1.173:8080/oneplanner/";
+	//public final String URL = "http://13.124.1.173:8080/oneplannerdev/";
 
 	public UserInfo getUserA() {
 		UserInfo userA = new UserInfo();
@@ -451,16 +452,21 @@ public class TestObj {
 	
 	public TodayInfo getTodayA() {
 		TodayInfo todayA  = new TodayInfo();
-		todayA.setToday("20170105");
-		todayA.setContSeq("1");
+		todayA.setToday("20170911");
+		todayA.setContSeq("3");
+		todayA.setTitle("한글테스트 타이틀1");
+		todayA.setImageType("I");
 		todayA.setContent("한글테스트  content:A");
 		return todayA;
 	}	
 
 	public TodayInfo getTodayB() {
 		TodayInfo todayA  = new TodayInfo();
-		todayA.setToday("20170105");
-		todayA.setContSeq("2");
+		todayA.setToday("20170911");
+		todayA.setTitle("한글테스트 타이틀1");
+		todayA.setContSeq("4");
+		todayA.setImageType("O");
+		todayA.setImageUrl("https://i1.ruliweb.com/img/5/3/0/4/53049C354B1B710021");
 		todayA.setContent("test  content:B");
 		return todayA;
 	}	
