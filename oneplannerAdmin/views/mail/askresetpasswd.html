@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>OnePlanner서비스 관리</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+  <!-- <script data-require="angular.js@*" data-semver="1.1.5" src="http://code.angularjs.org/1.1.5/angular.js"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-sanitize.js"></script>
+  <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ko.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.css"/>
+  <script src="lib/angular-ui-router.js"></script>
+  <script src="lib/bootbox.min.js"></script>
+
+  <link rel="stylesheet" type="text/css"  href="css/intro.css">
+  <script>
+    $('#topnavbar').affix({
+      offset: {
+          top: $('#banner').height()
+      }
+  });
+</script>
+<script src="components/adminApp.js"></script>
+<script src="components/adminCtrl.js"></script>
+<script src="services/constant.js"></script>
+<script src="services/utils.js"></script>
+<script src="services/users.js"></script>
+<script src="services/admin.js"></script>
+<script src="services/pages.js"></script>
+<script src="services/todays.js"></script>
+<script src="components/intro.js"></script>
+<script src="components/profile.js"></script>
+<script src="components/appUsers.js"></script>
+<script src="components/admin.js"></script>
+<script src="components/todays.js"></script>
+<!-- Visualizer and url -->
+<link rel="stylesheet" href="css/visualizer.css">
+<script src="lib/show-current-browser-url.1.0.7.js"></script>
+<script src="https://unpkg.com/ui-router-visualizer@3"></script>
+
+</head>
+<body>
+<div data-ng-app="adminApp" data-ng-controller="adminCtrl" ng-class="{'debug-sref': debug.uisref, 'debug-view': debug.uiview}">
+  <div class="container-fluid" id="banner">
+    <div class="row">
+      <h1>OnePlanner서비스 관리</h1>
+    </div>
+  </div>
+ <div ng-include="'views/menu-nav.html'"></div>
+  <div class="container-fluid text-center" data-ng-controller="snsCtrl">
+    <div class="row content">
+      <div class="col-sm-3 col-md-2 hidden-xs sidenav  text-left">
+        <div ng-include="'views/leftbar.html'"></div>
+      </div>
+      <div class="col-sm-7 text-left">
+        <ui-view></ui-view>
+      </div>
+      <div class="col-sm-2 hidden-xs sidenav">
+        <div ng-include="'views/rightbar.html'"></div>
+      </div>
+    </div>
+  </div>
+  <footer class="container-fluid text-center">
+    <p>Managed by Gencode.</p>
+  </footer>
+</div>
+</body>
+</html>

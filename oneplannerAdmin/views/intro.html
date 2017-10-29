@@ -1,0 +1,133 @@
+<div class="intro-banner text-center">
+  <h1>현황판</h1>
+</div>
+<hr>
+  <div class="main-pan">
+    <div class="tab-content">
+      <div id="basic-status" class="tab-pane fade in active">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="list-group">
+                  <a ng-click="getUsers('totalUserCnt')" class="list-group-item list-group-item-success">
+                    <span class="label label-success pull-right">
+                    {{totalUserCnt| number: 0}}</span>전체가입자
+                  </a>
+                  <a ng-click="getUsers('emailUserCnt')" class="list-group-item list-group-item-info">
+                    <span class="label label-info pull-right">
+                    {{emailUserCnt| number: 0}}</span>이메일직접가입자
+                  </a>
+                  <a ng-click="getUsers('googleUserCnt')" class="list-group-item list-group-item-warning">
+                    <span class="label label-warning pull-right">
+                    {{googleUserCnt| number: 0}}</span>Google가입자
+                  </a>
+                </div>
+
+                <div class="list-group">
+                  <a ng-click="getUsers('authUnconfirmCnt')" class="list-group-item list-group-item-success">
+                    <span class="label label-success pull-right">
+                    {{authUnconfirmCnt|number:0}}</span> 가입확인메일전송건수
+                  </a>
+                  <a ng-click="getUsers('resetUnconfirmCnt')" class="list-group-item list-group-item-info">
+                    <span class="label label-info pull-right">
+                    {{resetUnconfirmCnt| number: 0}}</span>패스워드리셋메일전송건수
+                  </a>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="list-group">
+                  <a ng-click="getUsers('recentUserCntByMonth')" class="list-group-item list-group-item-success">
+                    <span class="label label-success pull-right">
+                    {{recentUserCntByMonth|number: 0}}</span>1달내 추가 정상ID수
+                  </a>
+                  <a ng-click="getUsers('recentUserCntByWeek')" class="list-group-item list-group-item-info">
+                    <span class="label label-info pull-right">
+                    {{recentUserCntByWeek|number: 0}}</span>1주일내 추가 정상ID수
+                  </a>
+                  <a ng-click="getUsers('recentUserCntByDay')" class="list-group-item list-group-item-warning">
+                    <span class="label label-warning pull-right">
+                    {{recentUserCntByDay|number: 0}}</span>1일내 추가 정상ID수
+                  </a>
+                  <a ng-click="getUsers('unconfirmedUserCntByWeek')" class="list-group-item list-group-item-danger">
+                    <span class="label label-danger pull-right">
+                    {{unconfirmedUserCntByWeek|number: 0}}</span>1주일내 추가 미ConfirmID수
+                  </a>
+                </div>
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div><!--/row-->
+          </div><!--/col-12-->
+        </div><!--/row-->
+      </div>    </div><!--tab-content-->
+      <table class="table" ng-class="{hidden:(users == undefinded || users.length == 0)}">
+        <thead>
+          <tr>
+            <th class="col-md-2">
+                <a href="#" ng-click="setUserNameOrder()">이름
+                  <span ng-show="userNameOrderSeq%3==1" class="fa fa-caret-up"/>
+                  <span ng-show="userNameOrderSeq%3==2" class="fa fa-caret-down"/>
+                </a>
+            </th>
+            <th class="col-md-2">메일전송</th>
+            <th class="col-md-5 hidden-sm hidden-xs">메일/상태</th>
+            <th class="col-md-3 hidden-sm hidden-xs">
+                <a href="#" ng-click="setSendDateOrder()">발송/수신일
+                  <span ng-show="sendDateOrderSeq%3==1" class="fa fa-caret-up"/>
+                  <span ng-show="sendDateOrderSeq%3==2" class="fa fa-caret-down"/>
+                </a>
+
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="x in users track by x.userId | orderBy: 'userName'">
+            <td>
+              <span>
+              <a ui-sref="appUser({userId: '{{x.userId}}', from:'intro'})">
+              {{ x.userName|lowercase}}
+              </span>
+              </a>
+            </td>
+            <td>
+              <span>
+                <button type="button" class="btn btn-default btn-xs"
+                ng-class="{disabled:authBtnDisable(x.authMode)}" ng-click="sendConfirmEmail(x.userId, x.langCode)">가입인증</button>
+                <button type="button" class="btn btn-default btn-xs"
+                ng-class="{disabled:resetBtnDisable(x.authMode)}" ng-click="sendResetEmail(x.userId, x.langCode)">비번리셋</button>
+              </span>
+            </td>
+            <td class="hidden-sm hidden-xs">
+              <a ui-sref="appUser({userId: '{{x.userId}}', from:'intro'})">
+                {{x.email}} / {{mailStatus(x.authMode, x.authYn)}}
+              </a>
+            </td>
+            <td class="hidden-sm hidden-xs">
+              <a ui-sref="appUser({userId: '{{x.userId}}', from:'intro'})">
+                {{x.sendDate}}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- pager -->
+      <ul ng-if="pager.pages.length" class="pagination  pager">
+          <li ng-class="{disabled:pager.currentPage === 1}">
+              <a ng-click="setPage(1)">First</a>
+          </li>
+          <li ng-class="{disabled:pager.currentPage === 1}">
+              <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
+          </li>
+          <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}" class="hidden-sm hidden-xs">
+              <a ng-click="setPage(page)">{{page}}</a>
+          </li>
+          <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+              <a ng-click="setPage(pager.currentPage + 1)">Next</a>
+          </li>
+          <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+              <a ng-click="setPage(pager.totalPages)">Last</a>
+          </li>
+      </ul>
+
+  </div>

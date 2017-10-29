@@ -1,0 +1,85 @@
+  <h1>사용자 등록</h1>
+  <p>사용자 기본정보를 등록하세요.</p>
+  <form name="frmUserAdd" class="form-horizontal" ng-submit="onSubmit()">
+  <div class="form-group has-feedback" ng-class="userIdStatusClass">
+    <label class="control-label col-xs-4 col-sm-4" for="inputUserId">사용자 아이디</label>
+    <div class="col-xs-6 col-sm-6">
+      <input type="text" ng-model="newUser.userId" name="inputUserId" id="inputUserId"
+      class="form-control" maxlength="15" ng-change="onUserIdChange()"
+      placeholder="사용자 아이디" required/>
+      <span class="glyphicon form-control-feedback" ng-class="userIdIconClass"></span>
+      <button type="button" ng-disabled="newUser.userDupChecked" class="btn btn-default btn-md"
+      style="margin-left: 1px"   ng-click="checkDupUserId()">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        중복체크&times;
+      </button>
+      <validator-help-ex help-status="userIdStatusClass" help-ok-msg="아이디 사용 가능합니다." help-warn-msg="아이디 중복체크 하세요."
+      help-error-msg="알파벳 및 숫자 포함하여 최소 6자 이상입니다."/>
+    </div>
+  </div>
+  <div class="form-group has-feedback" >
+    <label class="control-label col-xs-4 col-sm-4" for="inputName">이름 또는 닉네임</label>
+    <div class="col-xs-6 col-sm-6">
+      <input type="text" class="form-control" id="inputName" placeholder="이름 또는 닉네임" ng-model="newUser.userName">
+      <span class="glyphicon form-control-feedback"></span>
+    </div>
+  </div>
+
+  <div class="form-group has-feedback" ng-class="emailStatusClass">
+    <label class="control-label col-xs-4 col-sm-4" for="inputEmail">Email</label>
+    <div class="col-xs-6 col-sm-6">
+      <input type="text" class="form-control" id="inputEmail" placeholder="Email"
+      ng-model="newUser.email" ng-change="onEmailChange()" required>
+      <span class="glyphicon form-control-feedback" ng-class="emailIconClass"></span>
+      <validator-help help-status="emailStatusClass"
+      help-error-msg="이메일 형식을 입력하세요. ex) myid@google.com"/>
+    </div>
+  </div>
+
+  <div class="form-group has-feedback" ng-class="passwdStatusClass">
+    <label class="control-label col-xs-4 col-sm-4" for="inputPassword">비밀번호</label>
+    <div class="col-xs-5 col-sm-5">
+      <input type="password" class="form-control" id="inputPassword" placeholder="비밀번호"
+      ng-model="newUser.passwd" ng-change="onPasswdChange()" required>
+      <i class="glyphicon form-control-feedback" ng-class="passwdIconClass"></i>
+      <validator-help help-status="passwdStatusClass"
+      help-warn-msg="비번의 암호화수준이 낮습니다. 9자리이상 권장."
+      help-error-msg="알파벳 대소문자, 숫자조합으로 최소 6자리가 필요합니다."/>
+    </div>
+  </div>
+  <div class="form-group has-feedback" ng-class="passwdConfirmStatusClass">
+    <label class="control-label col-xs-4 col-sm-4" for="passwdConfirm">비밀번호확인</label>
+    <div class="col-xs-5 col-sm-5">
+      <input type="password" class="form-control" id="passwdConfirm" placeholder="비밀번호 확인"
+      ng-model="newUser.passwdConfirm" ng-change="onPasswdConfirmChange()" required>
+      <span class="glyphicon form-control-feedback" ng-class="passwdConfirmIconClass"></span>
+      <validator-help help-status="passwdConfirmStatusClass"
+      help-error-msg="비밀번호가 일치하지 않습니다."/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="userType" class="control-label  col-xs-4 col-sm-4">사용자구분</label>
+    <div class="form-inline col-xs-8 col-sm-8">
+      <label class="radio-inline"><input type="radio" value="S" name="radioUserType" ng-model="newUser.role" checked=true required>superuser</label>
+      <label class="radio-inline"><input type="radio" value="U" name="radioUserType" ng-model="newUser.role" required>operator</label>
+      <label class="radio-inline"><input type="radio" value="O" name="radioUserType" ng-model="newUser.role" required>observer</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-xs-offset-2 col-xs-10 col-sm-offset-2 col-sm-10">
+      <button type="submit" data-disable=false class="btn btn-primary"
+      ng-disabled="frmUserAdd.$invalid || !isSubmitValid">Submit</button>
+    </div>
+  </div>
+</form>
+  <pre>
+  isSubmitValid : {{isSubmitValid}}
+  form invalid: {{frmUserAdd.$invalid}}
+</pre>
+  newUser value:
+  <pre>
+    {{newUser | json}}
+  </pre>
+  <pre>
+  {{frmUserAdd | json}}
+  </pre>

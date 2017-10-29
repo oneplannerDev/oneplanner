@@ -1,0 +1,8 @@
+<div class="container">
+  <dl>
+    <dt>{{(globals.currentUser != undefined)?globals.currentUser.userId+"으로 로그인":"미로그인상태"}}</dt>
+    <dd> </dd>
+    <dt>{{(globals.currentUser != undefined)?"최근 로그인시간":""}}</dt>
+    <dd>- {{(globals.currentUser != undefined)?globals.currentUser.accessDate:""}}</dd>
+  </dl>
+</div>

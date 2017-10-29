@@ -1,0 +1,86 @@
+<div class="btnMargin">
+  <a ui-sref="todays({from:'todayUpdate'})" class="btn btn-default btn-sm">
+    <span class="glyphicon glyphicon-arrow-left"></span>목록
+  </a>
+  <a  ui-sref="todayAdd">
+  <button class="btn btn-default btn-sm btnCorner" >
+    <span class="glyphicon glyphicon-plus"></span>추가
+  </button>
+  </a>
+  <a  ui-sref="deleteToday()">
+  <button class="btn btn-default btn-sm btnCorner" >
+    <span class="glyphicon glyphicon-minus"></span>삭제
+  </button>
+  </a>
+</div>
+<hr />
+<div class="title-margin">
+  <h1>콘텐츠 편집</h1>
+</div>
+<form name="frmTodayEdit" class="form-horizontal form-opl" ng-submit="updateToday()">
+  <h4>등록일 : {{ today.todayP}} / {{ today.contSeq }}번째</h4>
+<div class="form-group">
+  <label for="inputTitle">제목:</label>
+  <input type="text" class="form-control" rows="5" ng-model="today.title" id="inputTitle" ng-change="onTitleChange()"
+  placeholder=""></input>
+</div>
+<div class="form-group">
+  <label for="inputContent">내용:</label>
+  <textarea class="form-control" rows="5" ng-model="today.content" id="inputContent" ng-change="onContentChange()"
+  placeholder=""></textarea>
+</div>
+<div class="form-group" >
+  <div>
+     <img ng-src="{{filepreview}}" class="img-responsive" ng-show="((selectedTabName == 'byFile')&&filepreview)"/>
+     <img ng-src="{{urlpreview}}" class="img-responsive" ng-show="((selectedTabName == 'byUrl')&&needUrlPreview)"/>
+  </div>
+  <div ng-show="today.imageUrlFull!=null">
+     <img ng-src="{{today.imageUrlFull}}" class="img-responsive" ng-show="!filepreview"/>
+  </div>
+  <div>
+    <ul  class="nav nav-tabs">
+      <li ng-class="urlClass">
+        <a data-toggle="tab" ng-class="{active:selectedTabName == 'byUrl'}" ng-click="onTabSelect('byUrl')">이미지링크등록</a>
+      </li>
+      <li ng-class="fileClass">
+        <a data-toggle="tab"ng-class="{active:selectedTabName == 'byFile'}"  ng-click="onTabSelect('byFile')">이미지 업로드</a>
+      </li>
+    </ul>
+
+    <div class="tab-content clearfix">
+      <div class="tab-pane" ng-class="{active:selectedTabName == 'byUrl'}">
+        <div class="input-group col-xs-12">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+          <input type="text" class="form-control input-md" placeholder="이미지 링크추가"
+          ng-model="today.imageUrl" ng-change="onImgUrlChange()">
+        </div>
+      </div>
+      <div class="tab-pane"  ng-class="{active:selectedTabName == 'byFile'}">
+        <input type="file" id="upfile" fileinput="file" filepreview="filepreview" class="file"/>
+        <div class="input-group col-xs-12">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+          <input type="text" class="form-control input-md" disabled placeholder="이미지 파일 추가">
+          <span class="input-group-btn">
+            <button class="browse btn btn-primary input-md" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-xs-10 col-sm-10">
+    <button type="submit" data-disable=false class="btn btn-primary"
+    ng-disabled="filepreview == '' && urlpreview ==''">Submit</button>
+  </div>
+</div>
+</form>
+<script>
+  $(document).on('click', '.browse', function(){
+    var file = $(this).parent().parent().parent().find('.file');
+    file.trigger('click');
+  });
+  $(document).on('change', '.file', function(){
+    $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+  });
+</script>

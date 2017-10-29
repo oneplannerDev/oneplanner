@@ -1,0 +1,57 @@
+<div class="title-margin">
+  <h1>관리자 설정</h1>
+  <p>관리자 비밀번호를 변경할 수 있습니다.</p>
+</div>
+  <form name="frmAdminUpdate" class="form-horizontal form-opl" ng-submit="onSubmit()">
+    <div class="row inputCentered">
+      <div class="form-group has-feedback ">
+        <input type="text" class="form-control" id="adminEmail" placeholder="admin email"
+        ng-model="adminForUpdate.email" ng-change="onEmailChange()" required>
+      </div>
+    </div>
+    <div class="row inputCentered">
+      <div class="form-group">
+        <button type="submit" data-disable=false class="btn btn-primary  btn-block"
+        ng-disabled="frmAdminUpdate.$invalid || !isEmailSubmitValid">이메일변경</button>
+      </div>
+    </div>
+  </form>
+  <form name="frmAdminPwdUpdate" class="form-horizontal form-opl" ng-submit="onSubmitPwd()">
+    <div class="row inputCentered">
+      <div class="form-group has-feedback" ng-class="oldPasswdStatusClass">
+        <input type="password" class="form-control" id="inputOldPassword" placeholder="현재비밀번호"
+        ng-model="adminForUpdate.oldPasswd" ng-change="onOldPasswdChange()" required>
+        <i class="glyphicon form-control-feedback" ng-class="oldPasswdIconClass"></i>
+        <validator-help help-status="oldPasswdStatusClass"
+        help-error-msg="비밀번호가 일치하지 않습니다."/>
+      </div>
+    </div>
+    <div class="row inputCentered">
+      <div class="form-group has-feedback row inputCentered" ng-class="passwdStatusClass">
+        <input type="password" class="form-control" id="inputPassword" placeholder="비밀번호"
+        ng-model="adminForUpdate.newPasswd" ng-change="onPasswdChange()" required>
+        <i class="glyphicon form-control-feedback" ng-class="passwdIconClass"></i>
+        <validator-help help-status="passwdStatusClass"
+        help-warn-msg="비번의 암호화수준이 낮습니다. 6자리이상 권장."
+        help-error-msg="알파벳 또는 숫자로 최소 6자리가 필요합니다."/>
+      </div>
+    </div>
+    <div class="row inputCentered">
+      <div class="form-group has-feedback " ng-class="passwdConfirmStatusClass">
+        <input type="password" class="form-control" id="passwdConfirm" placeholder="비밀번호 확인"
+        ng-model="adminForUpdate.newPasswdConfirm" ng-change="onPasswdConfirmChange()" required>
+        <span class="glyphicon form-control-feedback" ng-class="passwdConfirmIconClass"></span>
+        <validator-help help-status="passwdConfirmStatusClass"
+        help-error-msg="비밀번호가 일치하지 않습니다."/>
+      </div>
+    </div>
+    <div class="row inputCentered">
+      <div class="form-group">
+        <button type="submit" data-disable=false class="btn btn-primary  btn-block"
+        ng-disabled="frmAdminPwdUpdate.$invalid || !isSubmitValid">비밀번호변경</button>
+      </div>
+    </div>
+    <!--pre>
+      {{adminForUpdate | json}}
+    </pre-->
+</form>

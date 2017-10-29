@@ -1,0 +1,26 @@
+<nav class="navbar navbar-inverse" id="topnavbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li ng-class="{active:$state.current.name=='intro'}"><a ui-sref="intro({from:''})" ui-sref-opts="{reload:true}">현황판</a></li>
+        <li ng-class="{active:$state.current.name=='appUsers'}"><a ui-sref="appUsers({from:''})"  ui-sref-opts="{reload:true}">사용자관리</a></li>
+        <li ng-class="{active:$state.current.name=='todays'}"><a ui-sref="todays({from:''})"  ui-sref-opts="{reload:true}">컨텐츠관리</a></li>
+        <li ng-class="{active:$state.current.name=='adminUpdate'}"><a ui-sref="adminUpdate"  ui-sref-opts="{reload:true}">관리자설정</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="(globals.currentUser == undefined)">
+          <a ng-click="setLog()">login<span class="glyphicon glyphicon-log-in"></span></a>
+        </li>
+        <li ng-show="(globals.currentUser != undefined)">
+          <a ng-click="setLog()">logout<span class="glyphicon glyphicon-log-out"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

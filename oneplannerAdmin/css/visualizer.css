@@ -1,0 +1,40 @@
+body.debug-sref {
+  [ui-sref]:after {
+    content: ' ui-sref="' attr(ui-sref) '"';
+    font-family: monospace;
+  }
+
+  [ui-sref] {
+    padding: 0 0.25em;
+  }
+}
+
+body.debug-view {
+  ui-view {
+    padding: 0 1em 1em 1em;
+    display: block;
+    border: 5px solid darkgrey;
+    ui-view {
+      margin: 1em;
+    }
+
+    &:before {
+      content: "<ui-view>";
+      display: block;
+      width: 100%;
+      font-size: 1em;
+      font-weight: bold;
+      text-align: center;
+      background-color: darkgrey;
+      margin: 0 -1em;
+      padding: 0 1em;
+    }
+
+    &:empty:after {
+      display: block;
+      width: 100%;
+      text-align: center;
+      content: "No view is loaded into this ui-view";
+    }
+  }
+}

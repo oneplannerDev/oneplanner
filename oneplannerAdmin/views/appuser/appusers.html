@@ -1,0 +1,104 @@
+<div class="title-margin">
+  <h1>사용자 관리</h1>
+  <p>고객의 등록인증 또는 패스워드리셋 메일을 전송 관리</p>
+</div>
+
+<form class="navbar-form">
+  <div class="form-group">
+    <input class="form-control" id="dateFrom" name="dateFrom" ng-model="searchParam.dateFrom" ng-change="onDateChange('from')" placeholder="YYYY-MM-DD" type="text" size="9"/>
+    - <input class="form-control" id="dateTo" name="dateTo" ng-model="searchParam.dateTo" ng-change="onDateChange('to')" placeholder="YYYY-MM-DD" type="text" size="9"/>
+  </div>
+  <div class="form-group">
+    <input type="text" name="searchWord" ng-model="searchParam.searchWord" class="form-control" placeholder="이름/이메일" on-enter-key="searchByKey()">
+  </div>
+  <button class="btn btn-default glyphicon glyphicon-search" ng-click="searchByKey()"/>
+<table class="table" >
+  <thead>
+    <tr>
+      <th class="col-md-2">
+          <a href="#" ng-click="setUserNameOrder()">이름
+            <span ng-show="userNameOrderSeq%3==1" class="fa fa-caret-up"/>
+            <span ng-show="userNameOrderSeq%3==2" class="fa fa-caret-down"/>
+          </a>
+      </th>
+      <th class="col-md-2">메일전송</th>
+      <th class="col-md-5 hidden-sm hidden-xs">메일/상태</th>
+      <th class="col-md-3 hidden-sm hidden-xs">
+          <a href="#" ng-click="setSendDateOrder()">발송/수신일
+            <span ng-show="sendDateOrderSeq%3==1" class="fa fa-caret-up"/>
+            <span ng-show="sendDateOrderSeq%3==2" class="fa fa-caret-down"/>
+          </a>
+
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="x in users track by x.userId | orderBy: 'userName'">
+      <td>
+        <span>
+        <a ui-sref="appUser({userId: '{{x.userId}}', from:'appUsers'})">
+        {{ x.userName|lowercase}}
+        </span>
+        </a>
+      </td>
+      <td>
+        <span>
+          <button type="button" class="btn btn-default btn-xs"
+          ng-class="{disabled:authBtnDisable(x.authMode)}" ng-click="sendConfirmEmail(x.userId, x.langCode)">가입인증</button>
+          <button type="button" class="btn btn-default btn-xs"
+          ng-class="{disabled:resetBtnDisable(x.authMode)}" ng-click="sendResetEmail(x.userId, x.langCode)">비번리셋</button>
+        </span>
+      </td>
+      <td class="hidden-sm hidden-xs">
+        <a ui-sref="appUser({userId: '{{x.userId}}', from:'appUsers'})">
+          {{x.email}} / {{mailStatus(x.authMode, x.authYn)}}
+        </a>
+      </td>
+      <td class="hidden-sm hidden-xs">
+        <a ui-sref="appUser({userId: '{{x.userId}}', from:'appUsers'})">
+          {{x.sendDate}}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- pager -->
+<ul ng-if="pager.pages.length" class="pagination  pager">
+    <li ng-class="{disabled:pager.currentPage === 1}">
+        <a ng-click="setPage(1)">First</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === 1}">
+        <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
+    </li>
+    <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}" class="hidden-sm hidden-xs">
+        <a ng-click="setPage(page)">{{page}}</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+        <a ng-click="setPage(pager.currentPage + 1)">Next</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+        <a ng-click="setPage(pager.totalPages)">Last</a>
+    </li>
+</ul>
+
+
+</form>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+    var date_input_from=$('input[name="dateFrom"]'); //our date input has the name "date"
+    var date_input_to=$('input[name="dateTo"]');
+     var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+     var options={
+       format: 'yyyy-mm-dd',
+       container: container,
+       todayHighlight: true,
+       autoclose: true,
+       language: 'ko'
+     };
+     date_input_from.datepicker(options);
+     date_input_to.datepicker(options);
+});
+
+</script>

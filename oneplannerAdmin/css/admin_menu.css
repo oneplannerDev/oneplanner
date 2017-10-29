@@ -1,0 +1,68 @@
+nav {
+  background:  #333;
+  position: fixed;
+  top:  0px;
+  left: 0px;
+  width: 100%;
+  z-index: 1;
+}
+
+/*nav ul:after {
+  contetn: "";
+  display: block;
+  clear: both;
+}*/
+
+.nav-main {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.nav-menu a {
+  float: left;
+}
+.nav-menu a, .dropdn .dropdnbtn {
+  display: inline-block;
+  color: white;
+  text-align: left;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.nav-menu a:hover, .dropdn:hover .dropdnbtn{
+  background-color: red;
+}
+
+.dropdn {
+  display: inline-block;
+}
+
+.dropdn-content  {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdn-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdn-content a:hover {background-color: #f1f1f1}
+
+.dropdn:hover .dropdn-content {
+    display: block;
+}
+
+.nav-menu ul:after {
+  clear: both;
+  content: "";
+  display: block;
+}

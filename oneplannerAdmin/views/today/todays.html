@@ -1,0 +1,110 @@
+<div class="row btnMargin">
+  <a  ui-sref="todayAdd">
+  <button class="btn btn-default btn-sm pull-right" >
+    <span class="glyphicon glyphicon-plus"></span>추가
+  </button>
+  </a>
+</div>
+<hr>
+<div class="title-margin">
+  <h1>콘텐츠관리</h1>
+  <p>공지할 Today를 등록 관리한다.</p>
+</div>
+
+<form class="navbar-form">
+  <div class="form-group">
+    <input class="form-control" id="dateFrom" name="dateFrom" ng-model="searchParam.dateFrom" ng-change="onDateChange('from')" placeholder="YYYY-MM-DD" type="text" size="9"/>
+    - <input class="form-control" id="dateTo" name="dateTo" ng-model="searchParam.dateTo" ng-change="onDateChange('to')" placeholder="YYYY-MM-DD" type="text" size="9"/>
+  </div>
+  <div class="form-group">
+    <input type="text" name="searchWord" ng-model="searchParam.searchWord" class="form-control" placeholder="내용" on-enter-key="searchByKey()">
+  </div>
+  <button class="btn btn-default glyphicon glyphicon-search" ng-click="searchByKey()"/>
+  <div class="table-responsive">
+    <table class="table" >
+      <thead>
+        <tr>
+          <th class="col-md-2">날짜/순번</th>
+          <th class="col-md-6"> 제목</th>
+          <th class="col-md-2"> 프리뷰</th>
+          <th class="col-md-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="x in todays track by x.today+x.contSeq | orderBy: 'today'">
+          <td>
+            <a ui-sref="today({today: '{{x.today}}',contSeq: '{{x.contSeq}}'})">
+            {{ strToDate(x.today)}} / {{x.contSeq}}
+            </span>
+            </a>
+          </td>
+          <td>
+            <a ui-sref="today({today: '{{x.today}}',contSeq: '{{x.contSeq}}'})">
+              {{x.title}}
+            </a>
+          </td>
+          <td>
+            <a ui-sref="today({today: '{{x.today}}',contSeq: '{{x.contSeq}}'})"
+            ng-mouseover="showImagePopup(fullUrl(x.imageType, x.imageUrl))"
+            ng-mouseenter="setOpenedId(x.today+'-'+x.contSeq)"
+            ng-mouseleave="closeImagePopup()">
+            <img src="{{fullUrl(x.imageType, x.imageUrl)}}" ng-show="x.imageUrl!=null" class="img-thumbnail" alt="Cinque Terre" width="36" height="36">
+              <div class="popover" ng-show="(showPopover && openedId == (x.today+'-'+x.contSeq))">
+                <img src="{{fullUrl(x.imageType, x.imageUrl)}}" width="200" height="200"></div>
+            </a>
+          </td>
+          <td>
+            <a  ui-sref="todayUpdate({today: '{{x.today}}',contSeq: '{{x.contSeq}}'})">
+            <button class="btn btn-default btn-xs btnCorner" >
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            </a>
+            <button class="btn btn-default btn-xs btnCorner" ng-click="deleteToday(x.today, x.contSeq)">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!-- pager -->
+<div class="pagination">
+<ul ng-if="pager.pages.length" class="pagination  pager">
+    <li ng-class="{disabled:pager.currentPage === 1}">
+        <a ng-click="setPage(1)">First</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === 1}">
+        <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
+    </li>
+    <li ng-repeat="page in pager.pages" ng-class="{disabled:pager.currentPage === page}" class="hidden-xs">
+        <a ng-click="setPage(page)">{{page}}</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+        <a ng-click="setPage(pager.currentPage + 1)">Next</a>
+    </li>
+    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+        <a ng-click="setPage(pager.totalPages)">Last</a>
+    </li>
+</ul>
+</div>
+</form>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+    var date_input_from=$('input[name="dateFrom"]'); //our date input has the name "date"
+    var date_input_to=$('input[name="dateTo"]');
+     var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+     var options={
+       format: 'yyyy-mm-dd',
+       container: container,
+       todayHighlight: true,
+       autoclose: true,
+       language: 'ko'
+     };
+     date_input_from.datepicker(options);
+     date_input_to.datepicker(options);
+});
+
+</script>

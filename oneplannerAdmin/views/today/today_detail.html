@@ -1,0 +1,35 @@
+    <div class="btnBack">
+      <a ui-sref="todays({from:'todayDetail'})" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-arrow-left"></span>목록
+      </a>
+      <a  ui-sref="todayAdd">
+      <button class="btn btn-default btn-sm btnCorner" >
+        <span class="glyphicon glyphicon-plus"></span>추가
+      </button>
+      </a>
+      <a  ui-sref="todayUpdate({today: '{{today.today}}',contSeq: '{{today.contSeq}}'})">
+      <button class="btn btn-default btn-sm btnCorner" >
+        <span class="glyphicon glyphicon-pencil"></span>편집
+      </button>
+      </a>
+      <button class="btn btn-default btn-sm btnCorner" ng-click="deleteToday()">
+        <span class="glyphicon glyphicon-minus"></span>삭제
+      </button>
+    </div>
+    <hr>
+    <div class="title-margin">
+      <h1>콘텐츠상세</h1>
+      <p></p>
+    </div>
+    <!--pre>{{user | json}}</pre-->
+    <div class="form-opl">
+      <h4>등록일 : {{ today.todayP}} / {{ today.contSeq }}번째</h4>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">{{today.title}}</div>
+        <div class="panel-footer">{{today.content}}</div>
+        <div class="panel-body"  ng-show="today.imageUrlFull!=null">
+          <img ng-src="{{today.imageUrlFull}}" class="img-responsive"/></div>
+      </div>
+
+    </div>

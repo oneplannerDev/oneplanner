@@ -1,0 +1,35 @@
+<h2 class="text-center">Oneplanner 서비스관리 로그인</h2>
+<div class="jumbotron">
+  <p class="text-center">admin계정으로 등록하세요.</p>
+  <hr />
+  <form name="frmAdminLogin" class="form-horizontal" ng-submit="loginAdmin()">
+  <div class="row inputCentered">
+    <div>
+      <div class="form-group">
+        <input type="text" class="form-control" id="usr" ng-model="admin.userId">
+      </div>
+      <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+  </div>
+  <div class="row inputCentered">
+    <div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="pwd" placeholder="Password" ng-model="admin.passwd">
+      </div>
+      <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+  </div>
+  <div class="row inputCentered">
+    <div>
+      <div class="form-group">
+        <button type="submit" data-disable=false class="btn btn-primary btn-block"
+        ng-disabled="frmAdminLogin.$invalid">로그인</button>
+      </div>
+      <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+  </div>
+</form>
+</div>
